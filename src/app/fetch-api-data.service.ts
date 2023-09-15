@@ -14,7 +14,7 @@ const apiUrl = 'https://morning-badlands-99587.herokuapp.com/';
 @Injectable({
   providedIn: 'root',
 })
-export class UserRegistrationService {
+export class FetchApiDataService {
   // Inject the HttpClient module to the constructor params
   // This will provide HttpClient to the entire class, making it available via this.http
   constructor(private http: HttpClient) {}
@@ -59,7 +59,7 @@ export class UserRegistrationService {
       })
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
-//Making the api call for director
+  //Making the api call for director
   public getDirector(director: any): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
@@ -94,7 +94,7 @@ export class UserRegistrationService {
       })
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
-//Making the api call for specific user favourite movie
+  //Making the api call for specific user favourite movie
   public getFavouriteMovie(userId: any): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
@@ -142,7 +142,7 @@ export class UserRegistrationService {
       .pipe(catchError(this.handleError));
   }
 
-  //Making the api call for deleting favourite movie for speicfic user 
+  //Making the api call for deleting favourite movie for speicfic user
   public removeFavouriteMovie(userId: any): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
