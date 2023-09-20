@@ -8,17 +8,27 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
-//Declaring the api url that will provide data for the client app
+@NgModule({
+  imports: [
+
+    FormsModule,
+  ],
+
+})
+export class AppModule {}
+
+
 const apiUrl = 'https://morning-badlands-99587.herokuapp.com/';
 @Injectable({
   providedIn: 'root',
 })
 export class FetchApiDataService {
-  // Inject the HttpClient module to the constructor params
-  // This will provide HttpClient to the entire class, making it available via this.http
+
   constructor(private http: HttpClient) {}
-  // Making the api call for the user registration endpoint
+
   public userRegistration(userDetails: any): Observable<any> {
     console.log(userDetails);
     return this.http
@@ -26,14 +36,19 @@ export class FetchApiDataService {
       .pipe(catchError(this.handleError));
   }
 
-  //Making the api call for user Login
+
   public userLogin(userDetails: any): Observable<any> {
+    console.log(userDetails);
     return this.http
-      .post(apiUrl + 'login', userDetails)
+      .post(apiUrl + 'login', userDetails, {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+        }),
+      })
       .pipe(catchError(this.handleError));
   }
 
-  //Making the api call for get all movies
+
   public getMovies(): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
@@ -45,21 +60,18 @@ export class FetchApiDataService {
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
-  //making the api call for one movie
-  public getMovie(movieTitle: any): Observable<any> {
+
+  public getMovie(movieId: any): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
-      .get(apiUrl + 'movies', {
+      .get(apiUrl + 'movies/' + movieId, {
         headers: new HttpHeaders({
-          Authorization: 'Bearer' + token,
+          Authorization: 'Bearer ' + token,
         }),
-        params: {
-          title: movieTitle,
-        },
       })
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
-  //Making the api call for director
+
   public getDirector(director: any): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
@@ -71,7 +83,7 @@ export class FetchApiDataService {
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
-  //Making the api call for genre
+
   public getGenre(genre: any): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
@@ -83,7 +95,7 @@ export class FetchApiDataService {
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
-  //Making the api call for specific user
+
   public getUser(userId: any): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
@@ -94,7 +106,7 @@ export class FetchApiDataService {
       })
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
-  //Making the api call for specific user favourite movie
+
   public getFavouriteMovie(userId: any): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
@@ -106,11 +118,11 @@ export class FetchApiDataService {
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
-  //Making the api call for adding favourite movie to  specific user
-  public addFavouriteMovie(userId: any): Observable<any> {
+
+  public addFavouriteMovie(userId: any, movieId: string): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
-      .post(apiUrl + '/users/favouriteMovies/' + userId, {
+      .post(apiUrl + 'users' + '/' + userId + '/movies' + '/' + movieId, {
         headers: new HttpHeaders({
           Authorization: 'Bearer' + token,
         }),
@@ -118,19 +130,20 @@ export class FetchApiDataService {
       .pipe(catchError(this.handleError));
   }
 
-  //Making the api call for editing user info
-  public editUser(userId: any): Observable<any> {
+
+  public editUser(username: string, updatedUserData: any): Observable<any> {
     const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + token,
+    });
+
     return this.http
-      .put(apiUrl + '/users/updateInfo/' + userId, {
-        headers: new HttpHeaders({
-          Authorization: 'Bearer' + token,
-        }),
-      })
+      .put(apiUrl + 'users/' + username, updatedUserData, { headers: headers })
       .pipe(catchError(this.handleError));
   }
 
-  //Making the api call for deleting user
+
   public deleteUser(userId: any): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
@@ -142,18 +155,41 @@ export class FetchApiDataService {
       .pipe(catchError(this.handleError));
   }
 
-  //Making the api call for deleting favourite movie for speicfic user
-  public removeFavouriteMovie(userId: any): Observable<any> {
+ 
+  public removeFavouriteMovie(
+    username: string,
+    movieId: string
+  ): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
-      .delete(apiUrl + '/users/favouriteMovies/' + userId, {
+      .delete(apiUrl + 'users' + '/' + username + '/movies' + '/' + movieId, {
         headers: new HttpHeaders({
-          Authorization: 'Bearer' + token,
+          Authorization: 'Bearer ' + token,
         }),
       })
       .pipe(catchError(this.handleError));
   }
 
+  public getUserFavorites(username: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      Authorization: 'Bearer ' + token,
+    });
+    return this.http.get(
+      `https://morning-badlands-99587.herokuapp.com/users/${username}/favoritemovies`,
+      { headers: headers }
+    );
+  }
+
+  public getMovieById(movieId: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    const url = `https://morning-badlands-99587.herokuapp.com/movies/${movieId}/favoriteMovies`;
+    console.log('Fetching movie details from URL:', url); // <-- Log the URL here
+    const headers = new HttpHeaders({
+      Authorization: 'Bearer ' + token,
+    });
+    return this.http.get(url, { headers: headers });
+  }
   private extractResponseData(res: any): any {
     const body = res;
     return body || '';

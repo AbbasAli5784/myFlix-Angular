@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
-
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,12 +11,31 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { UserRegistrationFormComponent } from './user-registration-form/user-registration-form.component';
+import { MovieCardComponent } from './movie-card/movie-card.component';
+import { WelcomePageComponent } from './welcome-page/welcome-page.component';
+import { UserLoginFormComponent } from './user-login-form/user-login-form.component';
+import { MainViewComponent } from './main-view-component/main-view-component.component';
+import { MovieViewComponent } from './movie-view/movie-view.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { ProfileViewComponent } from './profile-view/profile-view.component';
+import { FavouriteMoviesComponent } from './favourite-movies/favourite-movies.component';
 
 @NgModule({
-  declarations: [AppComponent, UserRegistrationFormComponent],
+  declarations: [
+    AppComponent,
+    UserRegistrationFormComponent,
+    MovieCardComponent,
+    WelcomePageComponent,
+    UserLoginFormComponent,
+    MainViewComponent,
+    MovieViewComponent,
+    ProfileViewComponent,
+    FavouriteMoviesComponent,
+  ],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -28,6 +48,11 @@ import { UserRegistrationFormComponent } from './user-registration-form/user-reg
     MatCardModule,
     MatFormFieldModule,
     MatSnackBarModule,
+    MatCardModule,
+    MatGridListModule,
+    MatMenuModule,
+    FlexLayoutModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

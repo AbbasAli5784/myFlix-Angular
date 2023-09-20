@@ -1,0 +1,42 @@
+<div fxLayout="column" fxlayoutGap="16px">
+  <div fxLayout="row" fxLayoutAlign="end start">
+    <div class="accountDropdown">
+      <button mat-button [matMenuTriggerFor]="menu">Account</button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item [routerLink]="['/profile']">
+          {{ user.Username }}
+        </button>
+        <button mat-menu-item [routerLink]="['/movies']">Movies</button>
+        <button mat-menu-item [routerLink]="['/favorites']">
+          Favorite Movies
+        </button>
+        <button mat-menu-item (click)="logout()" [routerLink]="['/login']">
+          Logout
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+</div>
+
+<div fxLayout="row wrap" fxLayoutGap="16px">
+  <div fxFlex="24%" *ngFor="let movie of favorites">
+    <mat-card>
+      <div class="movie-image-container">
+        <img
+          mat-card-image
+          [src]="'assets/images/' + movie.ImagePath"
+          alt="{{ movie.Name }}"
+        />
+      </div>
+      <mat-card-content>
+        <h5>{{ movie.Name }}</h5>
+        <p>{{ movie.Description | slice : 0 : 100 }}...</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button [routerLink]="['/movies', movie.Name]">
+          View Details
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

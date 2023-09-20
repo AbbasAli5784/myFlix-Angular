@@ -1,0 +1,15 @@
+.movie-image-container {
+  width: 100%;
+  max-width: 200px;
+  max-height: 300px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.movie-image-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
