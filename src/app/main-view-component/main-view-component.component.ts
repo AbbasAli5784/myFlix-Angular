@@ -4,6 +4,12 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
+/**
+ * @component MainViewComponent
+ * @description Component for the main view of the application.
+ * @selector app-main-view-component
+ */
+
 @Component({
   selector: 'app-main-view-component',
   templateUrl: './main-view-component.component.html',
@@ -13,6 +19,13 @@ export class MainViewComponent implements OnInit {
   movies: any[] = [];
   user: any;
   favorites: string[] = [];
+
+  /**
+   * @constructor
+   * @param {FetchApiDataService} fetchApiData - Service for API data fetching.
+   * @param {MatSnackBar} snackBar - Service to dispatch Material Design snack bar messages.
+   * @param {Router} router - Service for navigation.
+   */
 
   constructor(
     private fetchApiData: FetchApiDataService,
@@ -52,15 +65,33 @@ export class MainViewComponent implements OnInit {
     }
   }
 
+  /**
+   * @method logout
+   * @description Logs out the user and navigates to the home page.
+   */
+
   logout() {
     localStorage.removeItem('token');
     this.router.navigate(['/']);
   }
+  /**
+   * @method isFavorite
+   * @description Determines if a movie is a favorite.
+   * @param {any} movie - The movie to check.
+   * @returns {boolean} Whether the movie is a favorite.
+   */
+
   isFavorite(movie: any): boolean {
     const isFav = this.favorites.includes(movie._id);
     console.log(`Is movie ${movie._id} a favorite?`, isFav); // Add this line
     return isFav;
   }
+
+  /**
+   * @method toggleFavorite
+   * @description Toggles a movie as a favorite.
+   * @param {any} movie - The movie to toggle.
+   */
 
   toggleFavorite(movie: any): void {
     if (this.isFavorite(movie)) {

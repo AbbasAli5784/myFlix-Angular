@@ -3,6 +3,12 @@ import { FetchApiDataService } from '../fetch-api-data.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 
+/**
+ * @component FavouriteMoviesComponent
+ * @description Component for viewing user's favourite movies.
+ * @selector app-favourite-movies
+ */
+
 @Component({
   selector: 'app-favourite-movies',
   templateUrl: './favourite-movies.component.html',
@@ -12,10 +18,21 @@ export class FavouriteMoviesComponent implements OnInit {
   favorites: any[] = [];
   user: any;
 
+ /**
+   * @constructor
+   * @param {FetchApiDataService} fetchApiData - Service for API data fetching.
+   * @param {Router} router - Service for navigation.
+   */
+
   constructor(
     private fetchApiData: FetchApiDataService,
     private router: Router
   ) {}
+
+ /**
+   * @method logout
+   * @description Logs out the user and navigates to the home page.
+   */
 
   logout() {
     localStorage.removeItem('token');

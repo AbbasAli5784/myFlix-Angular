@@ -23,7 +23,11 @@ import { MovieViewComponent } from './movie-view/movie-view.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { ProfileViewComponent } from './profile-view/profile-view.component';
 import { FavouriteMoviesComponent } from './favourite-movies/favourite-movies.component';
-
+/**
+ * @module AppModule
+ * @description The root module of the application.
+ * @requires BrowserModule, HttpClientModule, AppRoutingModule, FormsModule, BrowserAnimationsModule, MatDialogModule, MatInputModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatSnackBarModule, MatGridListModule, MatMenuModule, FlexLayoutModule, ReactiveFormsModule
+ */
 @NgModule({
   declarations: [
     AppComponent,
