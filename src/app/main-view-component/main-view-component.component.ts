@@ -3,6 +3,7 @@ import { FetchApiDataService } from '../fetch-api-data.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { FavoriteMoviesService } from '../favorite-movies.service';
 
 /**
  * @component MainViewComponent
@@ -30,10 +31,14 @@ export class MainViewComponent implements OnInit {
   constructor(
     private fetchApiData: FetchApiDataService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private favoriteMoviesService: FavoriteMoviesService
   ) {}
 
   ngOnInit(): void {
+    this.user = JSON.parse(localStorage.getItem('user') || '{}');
+
+    // Fetch all movies
     this.fetchApiData.getMovies().subscribe(
       (data: any) => {
         this.movies = data;
@@ -49,14 +54,21 @@ export class MainViewComponent implements OnInit {
       const decodedToken = helper.decodeToken(token);
       this.user = decodedToken;
       this.favorites = this.user.FavoriteMovies || [];
+      console.log('Initial Favorite Movies:', this.user.FavoriteMovies);
+      console.log('Token:', token); // Debugging line
+      console.log('Decoded Token:', decodedToken); // Debugging line
+      console.log('User:', this.user);
     }
 
     // Fetch user's favorite movies
     if (this.user && this.user.Username) {
       this.fetchApiData.getUserFavorites(this.user.Username).subscribe(
         (favorites: any[]) => {
-          this.favorites = favorites.map((movie) => movie._id);
+          console.log('Raw Favorites Array:', favorites);
+          this.favorites = favorites; // Directly assign the array of movie IDs
           console.log('Favorites Array:', this.favorites);
+
+          this.favoriteMoviesService.setFavorites(this.favorites);
         },
         (error: any) => {
           console.error('Error fetching user favorites:', error);
@@ -82,11 +94,8 @@ export class MainViewComponent implements OnInit {
    */
 
   isFavorite(movie: any): boolean {
-    const isFav = this.favorites.includes(movie._id);
-    console.log(`Is movie ${movie._id} a favorite?`, isFav); // Add this line
-    return isFav;
+    return this.favorites.includes(movie._id);
   }
-
   /**
    * @method toggleFavorite
    * @description Toggles a movie as a favorite.
@@ -106,6 +115,7 @@ export class MainViewComponent implements OnInit {
             if (index > -1) {
               this.favorites.splice(index, 1);
             }
+            this.favoriteMoviesService.setFavorites(this.favorites);
           },
           (error: any) => {
             console.error(error);
@@ -119,10 +129,9 @@ export class MainViewComponent implements OnInit {
         .addFavouriteMovie(this.user.Username, movie._id)
         .subscribe(
           (response: any) => {
-            this.snackBar.open('Added to favorites!', 'OK', {
-              duration: 2000,
-            });
+            this.snackBar.open('Added to favorites!', 'OK', { duration: 2000 });
             this.favorites.push(movie._id);
+            this.favoriteMoviesService.setFavorites(this.favorites);
           },
           (error: any) => {
             console.error(error);
